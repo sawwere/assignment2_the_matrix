@@ -1,4 +1,3 @@
-@file:Suppress("UNUSED_PARAMETER")
 package mmcs.assignment2
 /**
  * Ячейка матрицы: row = ряд, column = колонка
@@ -38,39 +37,39 @@ interface Matrix<E> {
  * Бросить исключение IllegalArgumentException, если height или width <= 0.
  */
 fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
-    return MatrixImpl(width, height, e)
+    return MatrixImpl(height, width, e)
 }
 
 /**
  * Реализация интерфейса "матрица"
  */
-
-@Suppress("EqualsOrHashCode")
-class MatrixImpl< E>(override val width: Int, override val height: Int, private val e: E ) : Matrix<E>{
-    val matr: List<MutableList< E>> = List(height) { MutableList(width) {e}  }
+class MatrixImpl< E>(override val height: Int, override val width: Int, private val e: E ) : Matrix<E>{
+    private val matrix: List<MutableList< E>> = List(height) { MutableList(width) {e}  }
 
     override fun get(row: Int, column: Int): E {
-        return matr.get(row).get(column)
+        return matrix[row][column]
     }
 
     override fun get(cell: Cell): E {
-        return matr.get(cell.row).get(cell.column)
+        return matrix[cell.row][cell.column]
     }
 
     override fun set(row: Int, column: Int, value: E) {
-        matr[row][column] = value
+        matrix[row][column] = value
     }
 
     override fun set(cell: Cell, value: E) {
-        matr[cell.row][cell.column] = value
+        matrix[cell.row][cell.column] = value
     }
 
     override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true;
+        }
         if (other !is Matrix<*>) {
             return false;
         }
-        if (other.height != height
-            || other.width != width) {
+        if (other.height != height || other.width != width) {
             return false
         }
         for (row in 0 until height) {
@@ -83,9 +82,14 @@ class MatrixImpl< E>(override val width: Int, override val height: Int, private 
         return true
     }
 
+
+    override fun hashCode(): Int {
+        return matrix.hashCode()
+    }
+
     override fun toString(): String {
         val sb = StringBuilder()
-        sb.appendLine("{")
+        sb.appendLine("MatrixImpl {")
         for (row in 0 until height) {
             for (column in 0 until width) {
                 sb.append(get(row, column))
@@ -93,7 +97,7 @@ class MatrixImpl< E>(override val width: Int, override val height: Int, private 
             }
             sb.appendLine()
         }
-        sb.appendLine("} height = ${height} width = ${width}")
+        sb.appendLine("} height = $height width = $width")
 
         return sb.toString()
     }

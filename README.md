@@ -1,8 +1,8 @@
 # Assignment #2. The Matrix
 
-Реализовать класс матрицы из файла [Matrix.kt](./Matrix.kt)
+Реализовать класс матрицы из файла [Matrix.kt](src/main/java/mmcs/assignment2/Matrix.kt)
 
-Решить с помощью него задачи из файла [Tasks.kt](./Tasks.kt)
+Решить с помощью него задачи из файла [Tasks.kt](src/main/java/mmcs/assignment2/Tasks.kt)
 
 ### Немного теории
 
