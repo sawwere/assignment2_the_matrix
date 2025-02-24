@@ -1,9 +1,3 @@
-@file:Suppress("UNUSED_PARAMETER")
-package mmcs.assignment2
-
-import mmcs.assignment2.Matrix
-import mmcs.assignment2.createMatrix
-
 /**
  * Пример
  *
@@ -20,20 +14,48 @@ fun <E> transpose(matrix: Matrix<E>): Matrix<E> {
     return result
 }
 
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
+fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
+    val result = createMatrix(matrix.width, matrix.height, matrix[0, 0])
+    for (row in 0 until matrix.height) {
+        for (column in 0 until matrix.width) {
+            result[column, row] = matrix.get(row, column)
+        }
+    }
+    return result
+}
 
 /**
  * Сложить две заданные матрицы друг с другом.
  * Складывать можно только матрицы совпадающего размера -- в противном случае бросить IllegalArgumentException.
  * При сложении попарно складываются соответствующие элементы матриц
  */
-operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
+    if (other.height != height
+        || other.width != width) {
+        throw IllegalArgumentException("Нельзя выполнить сложение для матриц разного размера")
+    }
+    val result = createMatrix(this.width, this.height, this[0, 0])
+    for (row in 0 until this.height) {
+        for (column in 0 until this.width) {
+            result[column, row] = this.get(row, column) + other[row, column]
+        }
+    }
+    return result
+}
 
 /**
  * Инвертировать заданную матрицу.
  * При инвертировании знак каждого элемента матрицы следует заменить на обратный
  */
-operator fun Matrix<Int>.unaryMinus(): Matrix<Int> = TODO(this.toString())
+operator fun Matrix<Int>.unaryMinus(): Matrix<Int> {
+    val result = createMatrix(this.width, this.height, this[0, 0])
+    for (row in 0 until this.height) {
+        for (column in 0 until this.width) {
+            result[column, row] = - this.get(row, column)
+        }
+    }
+    return result
+}
 
 /**
  * Перемножить две заданные матрицы друг с другом.
@@ -57,7 +79,17 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> = TODO(this.toSt
  * 0 0 1 0
  * 0 0 0 0
  */
-fun findHoles(matrix: Matrix<Int>): Holes = TODO()
+fun findHoles(matrix: Matrix<Int>): Holes {
+    val rowHoles = HashMap<Int, Int>()
+    val columnHoles = HashMap<Int, Int>()
+    for (row in 0 until matrix.height) {
+        rowHoles.set(row, 0)
+        for (column in 0 until matrix.width) {
+            rowHoles[row] = rowHoles[row]!!.plus(matrix[row, column])
+        }
+    }
+    return Holes(rowHoles.filter { (k, v) -> v == 0 }.keys.toList(), columnHoles.filter { (k, v) -> v == 0 }.keys.toList())
+}
 
 /**
  * Класс для описания местонахождения "дырок" в матрице
@@ -83,3 +115,7 @@ data class Holes(val rows: List<Int>, val columns: List<Int>)
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
 fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> = TODO()
+
+fun main() {
+
+}
